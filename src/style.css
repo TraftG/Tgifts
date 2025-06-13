@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Montserrat', 'system-ui', 'sans-serif';
+  --color-bg: #18181b;
+  --color-bg-alternate: #ffffff;
+  --color-text: #ffffff;
+  --color-text-alternate: #000000;
+  --color-hint: rgba(255, 255, 255, 0.5);
+  --color-hint-solid: #e5e7eb;
+  --color-primary: #4b4953;
+  --color-secondary: rgba(150, 150, 150, 0.1);
+  --color-secondary-plain: rgb(65, 63, 70);
+  --color-secondary-alternate: rgba(0, 0, 0, 0.1);
+  --color-negative: #ef4444;
+  --animate-shimmer: shimmer 5s ease infinite;
+  --safe-top: calc(var(--tg-safe-area-inset-top, 0px) + 50px);
+  --safe-bottom: calc(var(--tg-safe-area-inset-bottom, 0px) + 0.5rem);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@layer utilities {
+  .safe-top {
+    padding-top: var(--safe-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: var(--safe-bottom);
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-text select-none cursor-default touch-manipulation overflow-hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  main {
+    @apply w-full h-full;
+  }
+}
