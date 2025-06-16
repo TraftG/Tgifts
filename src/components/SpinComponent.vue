@@ -68,11 +68,20 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import RouletteWheel from './RouletteWheel.vue';
   import PrizeCard from './PrizeCard.vue';
   import PrizeModal from './PrizeModal.vue';
+  import { WebApp } from '../telegram/telegram';
   
+  const userId = ref(1);
+
+  onMounted(() => {
+    if (WebApp?.initDataUnsafe?.user?.id) {
+      userId.value = WebApp.initDataUnsafe.user.id;
+    }
+  });
+
   const diamonds = ref(125);
   const isSpinning = ref(false);
   const demoMode = ref(false);
@@ -80,6 +89,10 @@
   const wheel = ref(null);
   const showPrizeModal = ref(false);
   const modalPrize = ref(null);
+
+  const isProcessingPayment = ref(false);
+  const paymentCheckTimeout = ref(null);
+
   
   const prizes = [
     { id: 1, img: new URL('../assets/cup.png', import.meta.url).href, name: 'Кубок', value: 100, rarity: 'legendary', probability: 0.8 },
@@ -115,27 +128,125 @@
     showPrizeModal.value = false;
   }
 
-  function spinRoulette() {
-    if (isSpinning.value) return;
+  async function spinRoulette() {
+    if (isSpinning.value || isProcessingPayment.value) return;
+
     const cost = demoMode.value ? 0 : 25;
     if (!demoMode.value && diamonds.value < cost) {
       alert('Недостаточно алмазов! Нужно 25.');
       return;
     }
-    isSpinning.value = true;
-    if (!demoMode.value) diamonds.value -= cost;
-  
-    const selectedPrize = weightedRandomPrize();
-    const prizeIndex = prizes.findIndex(p => p.id === selectedPrize.id);
-    spinToIndex.value = prizeIndex;
-  
-    setTimeout(() => {
-      isSpinning.value = false;
-      if (!demoMode.value) diamonds.value += selectedPrize.value;
-      modalPrize.value = selectedPrize;
-      showPrizeModal.value = true;
-      spinToIndex.value = null;
-    }, 3000);
+
+    if (!demoMode.value) {
+      isProcessingPayment.value = true;
+      try {
+        console.log('Начинаем запрос на оплату...');
+        console.log('User ID:', userId.value);
+        
+        const paymentResponse = await fetch(`https://fafaf-sedx.onrender.com/payment?user_id=${userId.value}`);
+
+        console.log('Получен ответ от сервера:', paymentResponse.status);
+        
+        if (!paymentResponse.ok) {
+          throw new Error(`HTTP error! status: ${paymentResponse.status}`);
+        }
+
+        const paymentData = await paymentResponse.json();
+        console.log('Данные оплаты:', paymentData);
+
+        if (paymentData.invoice_link) {
+          console.log('Открываем ссылку на оплату:', paymentData.invoice_link);
+          
+          // Сохраняем время начала ожидания оплаты
+          const startTime = Date.now();
+          
+          // Функция проверки статуса
+          const checkPaymentStatus = async () => {
+            try {
+              console.log('Проверяем статус оплаты для user_id:', userId.value);
+              const statusResponse = await fetch(`https://fafaf-sedx.onrender.com/status?user_id=${userId.value}`);
+              
+              if (!statusResponse.ok) {
+                throw new Error(`HTTP error! status: ${statusResponse.status}`);
+              }
+
+              const statusData = await statusResponse.json();
+              console.log('Статус оплаты:', statusData);
+
+              if (statusData.paid === true) {
+                console.log('Оплата подтверждена, запускаем рулетку');
+                clearInterval(checkStatusInterval);
+                isProcessingPayment.value = false;
+
+                isSpinning.value = true;
+                diamonds.value -= cost;
+
+                const selectedPrize = weightedRandomPrize();
+                const prizeIndex = prizes.findIndex(p => p.id === selectedPrize.id);
+                spinToIndex.value = prizeIndex;
+
+                setTimeout(() => {
+                  isSpinning.value = false;
+                  diamonds.value += selectedPrize.value;
+                  modalPrize.value = selectedPrize;
+                  showPrizeModal.value = true;
+                  spinToIndex.value = null;
+                }, 3000);
+              }
+            } catch (statusError) {
+              console.error('Ошибка при проверке статуса оплаты:', statusError);
+              clearInterval(checkStatusInterval);
+              isProcessingPayment.value = false;
+              alert('Ошибка при проверке статуса оплаты. Пожалуйста, попробуйте еще раз.');
+            }
+          };
+
+          // Открываем ссылку на оплату
+          window.location.href = paymentData.invoice_link;
+
+          // Начинаем периодическую проверку статуса
+          const checkStatusInterval = setInterval(() => {
+            // Проверяем, не прошло ли слишком много времени (5 минут)
+            if (Date.now() - startTime > 5 * 60 * 1000) {
+              clearInterval(checkStatusInterval);
+              isProcessingPayment.value = false;
+              alert('Время ожидания оплаты истекло. Пожалуйста, попробуйте еще раз.');
+              return;
+            }
+            checkPaymentStatus();
+          }, 2000);
+
+          // Добавляем обработчик возврата на страницу
+          window.addEventListener('focus', () => {
+            console.log('Страница получила фокус, проверяем статус оплаты');
+            checkPaymentStatus();
+          });
+        } else {
+          console.error('Ссылка на оплату не получена');
+          isProcessingPayment.value = false;
+          alert('Не удалось получить ссылку для оплаты. Пожалуйста, попробуйте еще раз.');
+        }
+      } catch (paymentError) {
+        console.error('Ошибка при запросе на оплату:', paymentError);
+        isProcessingPayment.value = false;
+        alert('Ошибка при запросе на оплату. Пожалуйста, попробуйте еще раз.');
+      }
+    } else {
+      // Логика для демо-режима без оплаты
+      isSpinning.value = true;
+
+      const selectedPrize = weightedRandomPrize();
+      const prizeIndex = prizes.findIndex(p => p.id === selectedPrize.id);
+      spinToIndex.value = prizeIndex;
+
+      setTimeout(() => {
+        isSpinning.value = false;
+        if (!demoMode.value) diamonds.value += selectedPrize.value;
+        modalPrize.value = selectedPrize;
+        showPrizeModal.value = true;
+        spinToIndex.value = null;
+      }, 3000);
+    }
   }
   </script>
   
