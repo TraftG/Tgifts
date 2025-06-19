@@ -1,10 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
+@theme {
   --font-sans: 'Montserrat', 'system-ui', 'sans-serif';
-  --color-bg: #0c0c16;
+  --color-bg: #021125;
   --color-bg-alternate: #ffffff;
   --color-text: #ffffff;
   --color-text-alternate: #000000;

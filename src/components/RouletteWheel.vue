@@ -10,67 +10,63 @@
 
       <!-- Рулетка -->
       <div ref="rouletteRef" class="flex gap-2" style="transform: translateX(0); padding-left: 20px;">
-        <PrizeCard
-          v-for="(prize, index) in repeatedPrizes"
-          :key="`${prize.id}-${index}`"
-          :prize="prize"
-          :bgClass="getRarityGradient(prize.rarity)"
-        />
+        <PrizeCard v-for="(prize, index) in repeatedPrizes" :key="`${prize.id}-${index}`" :prize="prize"
+          :bgClass="getRarityGradient(prize.rarity)" />
       </div>
     </div>
   </div>
 </template>
 
-  
-  <script setup>
-  import { ref, watch, nextTick, defineExpose } from 'vue';
-  import PrizeCard from './PrizeCard.vue';
-  
-  const props = defineProps({
-    prizes: Array,
-    spinToIndex: Number,
-    spinning: Boolean
-  });
-  
-  const rouletteRef = ref(null);
-  const repeatedPrizes = [...props.prizes, ...props.prizes, ...props.prizes];
-  
-  function getRarityGradient(rarity) {
-    switch (rarity) {
-      case 'legendary': return 'bg-yellow-400';
-      case 'epic': return 'bg-purple-500';
-      case 'rare': return 'bg-pink-400';
-      default: return 'bg-gray-400';
-    }
+
+<script setup>
+import { ref, watch, nextTick, defineExpose } from 'vue';
+import PrizeCard from './PrizeCard.vue';
+
+const props = defineProps({
+  prizes: Array,
+  spinToIndex: Number,
+  spinning: Boolean
+});
+
+const rouletteRef = ref(null);
+const repeatedPrizes = [...props.prizes, ...props.prizes, ...props.prizes];
+
+function getRarityGradient(rarity) {
+  switch (rarity) {
+    case 'legendary': return 'bg-yellow-400';
+    case 'epic': return 'bg-purple-500';
+    case 'rare': return 'bg-pink-400';
+    default: return 'bg-gray-400';
   }
-  
-  // Экспортируем ref для управления из родителя
-  defineExpose({ rouletteRef });
-  
-  // Слушаем spinToIndex и запускаем анимацию
-  watch(() => props.spinToIndex, async (newIndex) => {
-    if (newIndex === null) return;
-    await nextTick();
-    const itemWidth = 120;
-    const containerWidth = rouletteRef.value?.offsetParent?.offsetWidth || 600;
-    const center = containerWidth / 2;
-    const middleSetIndex = props.prizes.length;
-    const targetIndex = middleSetIndex + newIndex;
-    const targetCenter = targetIndex * itemWidth + itemWidth / 2;
-    const move = center - targetCenter;
-    const fullRot = props.prizes.length * itemWidth * 1;
-    const finalPos = move - fullRot;
-  
-    const el = rouletteRef.value;
-    if (el) {
-      el.style.transition = 'none';
-      el.style.transform = 'translateX(0px)';
-      void el.offsetHeight;
-      el.style.transition = 'transform 1.5s cubic-bezier(0.23, 1, 0.32, 1)';
-            el.style.transform = `translateX(${finalPos}px)`;
-    }
-  });
-  </script>
+}
+
+// Экспортируем ref для управления из родителя
+defineExpose({ rouletteRef });
+
+// Слушаем spinToIndex и запускаем анимацию
+watch(() => props.spinToIndex, async (newIndex) => {
+  if (newIndex === null) return;
+  await nextTick();
+  const itemWidth = 120;
+  const containerWidth = rouletteRef.value?.offsetParent?.offsetWidth || 600;
+  const center = containerWidth / 2;
+  const middleSetIndex = props.prizes.length;
+  const targetIndex = middleSetIndex + newIndex;
+  const targetCenter = targetIndex * itemWidth + itemWidth / 2;
+  const move = center - targetCenter;
+  const fullRot = props.prizes.length * itemWidth * 1;
+  const finalPos = move - fullRot;
+
+  const el = rouletteRef.value;
+  if (el) {
+    el.style.transition = 'none';
+    el.style.transform = 'translateX(0px)';
+    void el.offsetHeight;
+    el.style.transition = 'transform 1.5s cubic-bezier(0.23, 1, 0.32, 1)';
+    el.style.transform = `translateX(${finalPos}px)`;
+  }
+});
+</script>
 
 <style scoped>
 .roulette-container {
@@ -113,5 +109,4 @@
   border-style: solid;
   filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
 }
-
 </style>
