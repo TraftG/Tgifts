@@ -1,9 +1,18 @@
 <template>
   <div class="grid-container">
-    <div v-for="(gift, index) in inventory" :key="index" class="gift-item"
-      style="background: linear-gradient(to bottom, #031936, #09489C);">
-      <img v-if="gift.image_path" :src="gift.image_path" alt="Gift Image" class="gift-image"
-        @error="handleImageError(gift.image_path)" />
+    <div
+      v-for="(gift, index) in inventory"
+      :key="index"
+      class="gift-item"
+      style="background: linear-gradient(to bottom, #031936, #09489C);"
+    >
+      <img
+        v-if="gift.image_path"
+        :src="gift.image_path"
+        alt="Gift Image"
+        class="gift-image"
+        @error="handleImageError(gift.image_path)"
+      />
       <div class="gift-info">
         <div class="font-bold flex items-center justify-center gap-1">
           {{ gift.star }} <img src="../assets/starsw.png" alt="" class="w-4 h-4" />
@@ -36,8 +45,8 @@ onMounted(async () => {
     const res = await fetch(`http://localhost:8001/inventory_check?user_id=${userId.value}`)
     const data = await res.json()
 
-    if (data.inventory && data.inventory.length > 0) {
-      inventory.value = data.inventory
+    if (data.inventory && Array.isArray(data.inventory.gifts)) {
+      inventory.value = data.inventory.gifts
     }
   } catch (error) {
     console.error('Fetch error:', error)
@@ -53,14 +62,12 @@ onMounted(async () => {
   padding: 16px;
   width: 100%;
   max-width: 500px;
-  /* Можно настроить под ваш дизайн */
   margin: 0 auto;
 }
 
 .gift-item {
   width: 100%;
   aspect-ratio: 3/4;
-  /* Соотношение ширины к высоте 3:4 */
   border-radius: 24px;
   display: flex;
   flex-direction: column;
