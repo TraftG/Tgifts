@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainMenu from '../views/MainMenu.vue'
 import InventoryPage from '../views/InventoryPage.vue'
+import RouletteWheel from '../components/RouletteWheel.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: MainMenu
+    component: RouletteWheel
   },
   {
     path: '/inventory',

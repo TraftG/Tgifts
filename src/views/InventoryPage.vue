@@ -6,14 +6,13 @@ import Card from '../components/Card.vue'
 const userImg = ref('https://via.placeholder.com/150')
 const username = ref('Triyengle')
 const userId = ref<number>(6750739892)
-const imagePath = ref('') 
+const imagePath = ref('')
 
 onMounted(async () => {
     const user = WebApp.initDataUnsafe.user
 
     if (user) {
         userImg.value = user.photo_url || 'https://via.placeholder.com/150'
-        username.value = user.username || 'Triyengle'
         userId.value = user.id || 6750739892
     } else {
         console.warn('User data not available in initDataUnsafe')
@@ -23,13 +22,17 @@ onMounted(async () => {
 
 
 <template>
-    <div class="flex flex-col items-center mt-6">
-        <img :src="userImg" alt="User Photo"
-            class="w-32 h-32 rounded-full object-cover border border-gray-300 shadow-md" />
-        <div class="text-xl font-semibold mt-4 text-center">{{ username }}</div>
-    </div>
+    <div class="w-full flex flex-col items-center justify-center p-4">
 
-    <div>
-        <Card />
+        <div class="flex items-center gap-3 rounded-full bg-white/20 px-10 py-2 -translate-y-14"
+            style="display: inline-flex;">
+            <span class="text-sm font-bold text-muted-foreground select-none">Инвентарь</span>
+        </div>
+
+        <div>
+            <Card :user-id="userId" />
+            <div v-if="false">Инвентарь пуст</div> <!-- временно -->
+
+        </div>
     </div>
 </template>

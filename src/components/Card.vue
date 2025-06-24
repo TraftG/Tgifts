@@ -1,33 +1,26 @@
 <template>
-  <div class="grid-container">
-    <div
-      v-for="(gift, index) in inventory"
-      :key="index"
-      class="gift-item"
-      style="background: linear-gradient(to bottom, #031936, #09489C);"
-    >
-      <img
-        v-if="gift.image_path"
-        :src="gift.image_path"
-        alt="Gift Image"
-        class="gift-image"
-        @error="handleImageError(gift.image_path)"
-      />
-      <div class="gift-info">
+  <div class="grid grid-cols-3 gap-4 p-4 max-w-[500px] mx-auto sm:gap-3 sm:p-3">
+    <div v-for="(gift, index) in inventory" :key="index"
+      class="w-full aspect-[3/4] rounded-2xl flex flex-col items-center justify-center shadow-md p-2 bg-white/5 backdrop-blur-sm">
+      <img v-if="gift.image_path" :src="gift.image_path" alt="Gift Image" class="max-w-full max-h-[60%] object-contain"
+        @error="handleImageError(gift.image_path)" />
+      <div class="mt-2 text-white text-center">
         <div class="font-bold flex items-center justify-center gap-1">
-          {{ gift.star }} <img src="../assets/starsw.png" alt="" class="w-4 h-4" />
+          {{ gift.star }}
+          <img src="../assets/starsw.png" alt="" class="w-4 h-4" />
         </div>
       </div>
     </div>
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { WebApp } from '../telegram/telegram'
 
+const props = defineProps<{ userId: number }>()
 const username = ref('Triyengle')
-const userId = ref<number>(6750739892)
 const inventory = ref<any[]>([])
 
 const handleImageError = (imagePath: string) => {
@@ -35,64 +28,14 @@ const handleImageError = (imagePath: string) => {
 }
 
 onMounted(async () => {
-  const user = WebApp.initDataUnsafe?.user
-  if (user) {
-    userId.value = user.id
-    username.value = user.username || 'Triyengle'
-  }
-
   try {
-    const res = await fetch(`http://tgifts.space/inventory_check?user_id=${userId.value}`)
+    const res = await fetch(`https://tgifts.space/user_inventory?user_id=${props.userId}`)
     const data = await res.json()
-
-    if (data.inventory && Array.isArray(data.inventory.gifts)) {
-      inventory.value = data.inventory.gifts
+    if (Array.isArray(data.gifts)) {
+      inventory.value = data.gifts
     }
   } catch (error) {
     console.error('Fetch error:', error)
   }
 })
 </script>
-
-<style scoped>
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 16px;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.gift-item {
-  width: 100%;
-  aspect-ratio: 3/4;
-  border-radius: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 8px;
-}
-
-.gift-image {
-  max-width: 100%;
-  max-height: 60%;
-  object-fit: contain;
-}
-
-.gift-info {
-  margin-top: 8px;
-  color: white;
-  text-align: center;
-}
-
-@media (max-width: 500px) {
-  .grid-container {
-    gap: 12px;
-    padding: 12px;
-  }
-}
-</style>
