@@ -22,7 +22,7 @@ onMounted(async () => {
 
 
 <template>
-    <div class="w-full flex flex-col items-center justify-center p-4">
+    <div class="w-full flex flex-col items-center justify-center p-4 safe-top safe-bottom">
 
         <div class="flex items-center gap-3 rounded-full bg-white/20 px-10 py-2 -translate-y-14"
             style="display: inline-flex;">

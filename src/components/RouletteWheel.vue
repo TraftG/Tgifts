@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col items-center justify-center p-4 safe-top safe-bottom">
+<div class="w-full flex flex-col items-center justify-center pt-4 pb-4 safe-top safe-bottom">
     <!-- Demo Mode Toggle -->
     <div class="flex items-center gap-3 rounded-full bg-white/20 px-4 py-2 -translate-y-14"
       style="display: inline-flex;">
@@ -15,12 +15,13 @@
     </div>
 
     <!-- Gift Wheel Container -->
-    <div class="overflow-hidden w-full max-w-[600px] h-32 relative">
+    <div class="overflow-hidden w-full h-32 relative px-0 mx-0">
+
       <!-- Gift Strip -->
       <div class="flex" :class="{ 'spinning': spinning }" :style="{ transform: `translateX(-${currentOffset}px)` }"
         ref="stripRef">
         <div v-for="(gift, index) in giftStrip" :key="`${gift.telegram_gift_id}-${index}`"
-          class="w-[100px] h-full flex items-center justify-center flex-shrink-0">
+          class="w-[100px] h-full flex items-center justify-center flex-shrink-0 px-0 mx-0">
           <GiftItem :gift="gift" />
         </div>
       </div>
@@ -222,6 +223,7 @@ const handleSpin = async () => {
       }
 
       WebApp.openInvoice(paymentResult.payment_link)
+      // window.open(paymentResult.payment_link, '_blank')
       // Wait for payment confirmation and get gift
       targetGift = await sendSpinRequest()
       await performSpinAnimation(targetGift)

@@ -6,7 +6,7 @@
         <span v-else class="text-5xl mb-4">{{ prize.emoji }}</span>
   
         <h2 class="text-3xl font-bold mb-2">Вы выиграли подарок!</h2>
-        <p class="text-xl text-blue-400 font-semibold mb-4 flex items-center justify-center gap-1">{{ prize.name }} (+{{ prize.value }} <img src="../assets/starsw.png" alt="Звезды" class="w-5 h-5" />)</p>
+        <p class="text-xl font-semibold mb-4 flex items-center justify-center gap-1">{{ prize.name }} (+{{ prize.value }} <img src="../assets/starsw.png" alt="Звезды" class="w-5 h-5" />)</p>
   
         <p v-if="isDemoMode" class="text-sm text-gray-400 mb-6">
           Демо-режим нужен для тестирования шансов выпадения подарков.
@@ -16,7 +16,7 @@
           <button 
             v-if="isDemoMode"
             @click="$emit('toggleDemoMode')"
-            class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold transition-colors"
+            class="w-full py-3 px-4 rounded-lg font-bold transition-colors"
           >
             Отключить демо-режим
           </button>

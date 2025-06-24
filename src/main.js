@@ -7,7 +7,8 @@ import { WebApp } from './telegram/telegram'
 WebApp.lockOrientation()
 WebApp.disableVerticalSwipes()
 WebApp.enableClosingConfirmation()
-// WebApp.requestFullscreen()
+WebApp.expand()
+WebApp.requestFullscreen()
 
 const app = createApp(App)
 app.use(router)
