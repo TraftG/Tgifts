@@ -63,7 +63,7 @@ const demoMode = ref(false);
 
 // fetch подарков с бэка
 onMounted(async () => {
-  const response = await fetch('http://localhost:8001/get_spin_gifts') // Подставь правильный URL
+  const response = await fetch('https://tgifts.space/get_spin_gifts') // Подставь правильный URL
   const data = await response.json()
   giftList.value = data
   giftStrip.value = [...data, ...data, ...data] // Повторяем, чтобы лента была длиннее

@@ -15,7 +15,7 @@ export function useRoulette(gifts: any[]) {
     selectedGift.value = null
 
     // Имитация запроса к бэку
-      const response = await fetch(`http://localhost:8001/spin?user_id=${userId}`) // или твой URL
+      const response = await fetch(`http://tgifts.space/spin?user_id=${userId}`) // или твой URL
     const data = await response.json()
     const resultId = data.id
 

@@ -42,7 +42,7 @@ onMounted(async () => {
   }
 
   try {
-    const res = await fetch(`http://localhost:8001/inventory_check?user_id=${userId.value}`)
+    const res = await fetch(`http://tgifts.space/inventory_check?user_id=${userId.value}`)
     const data = await res.json()
 
     if (data.inventory && Array.isArray(data.inventory.gifts)) {
