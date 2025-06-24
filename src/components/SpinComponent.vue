@@ -2,42 +2,10 @@
   <div class="min-h-screen p-4 flex flex-col">
     <div class="flex justify-between items-center mb-6">
       <div class="flex gap-4">
-        <span class="text-lg px-4 py-2  font-bold mt-1 flex items-center gap-1 text-white rounded px-2">
-          <img src="../assets/starsw.png" alt="" class="w-5 h-5" />
-
-          {{ diamonds }}
-        </span>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="text-sm text-muted-foreground">Демо режим</span>
-        <button @click="demoMode = !demoMode"
-          :class="['w-12 h-6 p-0 transition-all rounded-xl', demoMode ? 'bg-blue-500' : 'bg-gray-300']">
-          <div
-            :class="['w-4 h-4 bg-white rounded-full transition-transform', demoMode ? 'translate-x-6' : 'translate-x-1']" />
-        </button>
       </div>
     </div>
 
     <RouletteWheel :prizes="prizes" :spinToIndex="spinToIndex" :spinning="isSpinning" ref="wheel" />
-
-    <button @click="spinRoulette" :disabled="isSpinning || (!demoMode && diamonds < 25)"
-      class="w-full h-14 text-lg font-bold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 rounded-xl hover:to-blue-700 disabled:opacity-50">
-      <template v-if="isSpinning">
-        <div class="flex items-center gap-2">
-          <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          Вращение...
-        </div>
-      </template>
-      <template v-else>
-        <div class="flex flex-col items-center">
-          <span>Мне повезёт!</span>
-          <span v-if="!demoMode" class="mt-1 flex items-center gap-1 text-white rounded px-2">
-            <img src="../assets/starsw.png" alt="" class="w-5 h-5" />
-            25
-          </span>
-        </div>
-      </template>
-    </button>
 
     <div class="mt-8">
       <h3 class="text-xl font-bold mb-4 text-center">Вы можете выиграть...</h3>

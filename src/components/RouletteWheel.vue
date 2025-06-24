@@ -1,16 +1,51 @@
 <template>
   <div class="w-full flex flex-col items-center justify-center p-4">
+    <div class="flex items-center gap-3 rounded-full bg-white/20 px-4 py-2 -translate-y-14"
+      style="display: inline-flex;">
+      <span class="text-sm text-muted-foreground select-none">Демо режим</span>
+      <button @click="demoMode = !demoMode" :class="[
+        'w-12 h-6 p-0 transition-all rounded-xl',
+        demoMode ? 'bg-green-500' : 'bg-gray-300'
+      ]">
+        <div :class="[
+          'w-4 h-4 bg-white rounded-full transition-transform',
+          demoMode ? 'translate-x-6' : 'translate-x-1'
+        ]" />
+      </button>
+    </div>
+
+
     <div class="overflow-hidden w-full max-w-[600px] h-32 relative">
       <div class="flex transition-all duration-[4000ms]" :style="{ transform: `translateX(-${currentOffset}px)` }"
         ref="stripRef">
-        <GiftItem v-for="(gift, index) in giftStrip" :key="index" :gift="gift" />
+        <div v-for="(gift, index) in giftStrip" :key="index" class="w-[100px] h-full flex items-center justify-center">
+          <GiftItem :gift="gift" />
+        </div>
       </div>
-      <div class="absolute top-0 bottom-0 left-1/2 transform -translate-x-1/2 w-[2px] bg-red-500 z-10"></div>
+
+      <!-- Верхний треугольник -->
+      <div
+        class="absolute bottom-0 left-1/2 transform -translate-x-1/3 z-10 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white">
+      </div>
+
+      <!-- Нижний треугольник -->
+      <div
+        class="absolute top-0 left-1/2 transform -translate-x-1/3 z-10 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white">
+      </div>
     </div>
 
-    <button class="mt-6 px-4 py-2 bg-blue-600 text-white rounded" @click="handleSpin" :disabled="spinning">
-      {{ spinning ? 'Крутится...' : 'Крутить рулетку' }}
-    </button>
+
+    <div class="flex items-center gap-3 rounded-full justify-center bg-white/5 px-4 py-2 mt-25 -translate-y-14"
+      style="display: inline-flex;">
+      <button @click="handleSpin" :disabled="spinning"
+        class="justify-center gap-1 flex items-center font-bold text-sm text-white">
+
+        {{ spinning ? 'Крутится...' : `Открыть за 25` }}
+        <img src="../assets/starsw.png" alt="" class="w-5 h-5" />
+      </button>
+    </div>
+
+
 
     <div v-if="selectedGift" class="mt-4 text-white text-xl">
       🎉 Выпал: {{ selectedGift.name }}
@@ -24,6 +59,7 @@ import GiftItem from './GiftItem.vue'
 import { useRoulette } from './useRoullete'
 
 const giftList = ref<any[]>([])
+const demoMode = ref(false);
 
 // fetch подарков с бэка
 onMounted(async () => {

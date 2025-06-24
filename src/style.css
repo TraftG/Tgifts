@@ -48,11 +48,17 @@
 
 @layer base {
   body {
-    @apply bg-bg text-text select-none cursor-default touch-manipulation overflow-hidden;
+    background-image: linear-gradient(to bottom, #031936, #09489C);
+    @apply text-text select-none cursor-default touch-manipulation overflow-hidden;
     -webkit-tap-highlight-color: transparent;
   }
+
+
+
 
   main {
     @apply w-full h-full;
   }
+
+  
 }
