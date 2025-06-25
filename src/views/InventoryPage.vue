@@ -22,17 +22,16 @@ onMounted(async () => {
 
 
 <template>
-    <div class="w-full flex flex-col items-center justify-center p-4 safe-top safe-bottom">
-
-        <div class="flex items-center gap-3 rounded-full bg-white/20 px-10 py-2 -translate-y-14"
-            style="display: inline-flex;">
-            <span class="text-sm font-bold text-muted-foreground select-none">Инвентарь</span>
-        </div>
-
-        <div>
-            <Card :user-id="userId" />
-            <div v-if="false">Инвентарь пуст</div> <!-- временно -->
-
-        </div>
+    <div class="w-full flex flex-col items-center p-4 safe-top safe-bottom ">
+      <!-- Заголовок с эффектом "приподнятости" -->
+      <div class="flex items-center gap-4 rounded-full bg-white/20 px-10 py-2 -translate-y-19 z-19"
+           style="display: inline-flex;">
+        <span class="text-sm font-bold text-muted-foreground select-none">Инвентарь</span>
+      </div>
+      
+      <!-- Контейнер с карточками сдвинут вверх -->
+      <div class="w-full h-[80vh] overflow-y-auto -mt-15">
+        <Card :userId="userId" />
+      </div>
     </div>
-</template>
+  </template>

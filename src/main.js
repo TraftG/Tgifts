@@ -8,7 +8,7 @@ WebApp.lockOrientation()
 WebApp.disableVerticalSwipes()
 WebApp.enableClosingConfirmation()
 WebApp.expand()
-WebApp.requestFullscreen()
+// WebApp.requestFullscreen()
 
 const app = createApp(App)
 app.use(router)

@@ -1,9 +1,10 @@
 <template>
-  <div class="grid grid-cols-3 gap-4 p-4 max-w-[500px] mx-auto sm:gap-3 sm:p-3">
+  <div class="grid grid-cols-3 gap-4 p-4 max-w-[500px] mx-auto sm:gap-3 sm:p-3 pb-20"> <!-- Добавлен pb-20 для отступа снизу -->
+    
     <div v-for="(gift, index) in inventory" :key="index"
-      class="w-full aspect-[3/4] rounded-2xl flex flex-col items-center justify-center shadow-md p-2 bg-white/5 backdrop-blur-sm">
-      <img v-if="gift.image_path" :src="gift.image_path" alt="Gift Image" class="max-w-full max-h-[60%] object-contain"
-        @error="handleImageError(gift.image_path)" />
+         class="w-full aspect-[3/4] rounded-2xl flex flex-col items-center justify-center p-2 bg-white/5 backdrop-blur-sm">
+      <img v-if="gift.image_path" :src="gift.image_path" alt="Gift Image"
+           class="max-w-full max-h-[60%] object-contain" @error="handleImageError(gift.image_path)" />
       <div class="mt-2 text-white text-center">
         <div class="font-bold flex items-center justify-center gap-1">
           {{ gift.star }}
@@ -13,7 +14,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'

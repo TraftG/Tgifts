@@ -1,5 +1,5 @@
 <template>
-<div class="w-full flex flex-col items-center justify-center pt-4 pb-4 safe-top safe-bottom">
+  <div class="w-full flex flex-col items-center justify-center pt-4 pb-4 safe-top safe-bottom">
     <!-- Demo Mode Toggle -->
     <div class="flex items-center gap-3 rounded-full bg-white/20 px-4 py-2 -translate-y-14"
       style="display: inline-flex;">
@@ -34,10 +34,11 @@
         </div>
         <!-- Bottom Arrow -->
         <div
-          class="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white">
+          class="absolute bottom-7 left-1/2 transform -translate-x-1/2 z-10 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white">
         </div>
+
         <!-- Center Line for debugging -->
-        <div class="absolute top-0 bottom-0 left-1/2 w-px bg-red-500 opacity-30 transform -translate-x-1/2"></div>
+
       </div>
     </div>
 
@@ -50,17 +51,7 @@
         <img src="../assets/starsw.png" alt="" class="w-5 h-5" />
       </button>
     </div>
-
-    <!-- Winner Display -->
-    <div v-if="selectedGift && !spinning" class="mt-4 text-center">
-      <p class="text-white text-sm">Вы выиграли: {{ selectedGift.name || `Подарок #${selectedGift.telegram_gift_id}` }}
-      </p>
-    </div>
-
-    <!-- Debug Info -->
-    <div v-if="demoMode" class="mt-2 text-xs text-white/60 text-center">
-      Offset: {{ Math.round(currentOffset) }}px | Items: {{ giftStrip.length }}
-    </div>
+    <AllGifts />
   </div>
 </template>
 
@@ -68,6 +59,7 @@
 import { ref, onMounted } from 'vue'
 import GiftItem from './GiftItem.vue'
 import { WebApp } from '../telegram/telegram'
+import AllGifts from './AllGifts.vue'
 
 // States
 const giftList = ref<any[]>([])
